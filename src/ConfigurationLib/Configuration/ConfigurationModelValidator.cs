@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+//
+// Note: When DataAnnotations are officially added to .NET Standard, remove the reference to the package.
+//
+// https://github.com/dotnet/standard/issues/450
+//
 
 namespace Evoq.Configuration
 {
