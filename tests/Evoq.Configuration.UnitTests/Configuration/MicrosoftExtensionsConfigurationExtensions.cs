@@ -11,6 +11,22 @@ namespace Evoq.Configuration
     public class MicrosoftExtensionsConfigurationExtensions
     {
         [TestMethod]
+        public void IConfiguration_GetAndValidate__when__required_and_supplied__then__model_correct()
+        {
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.AddInMemoryCollection(new Dictionary<string, string>()
+            {
+                { "RequiredString", "This value is needed." }
+            });
+
+            builder.Build().GetAndValidate(out DummyAppSettingsModel model, out IEnumerable<ConfigurationModelValidationError> errors);
+
+            Assert.IsNotNull(model);
+            Assert.AreEqual("This value is needed.", model.RequiredString);
+            Assert.IsNull(model.Banana);
+        }
+
+        [TestMethod]
         public void IConfiguration_GetAndValidate__when__required_and_supplied__then__true_no_errors()
         {
             ConfigurationBuilder builder = new ConfigurationBuilder();
