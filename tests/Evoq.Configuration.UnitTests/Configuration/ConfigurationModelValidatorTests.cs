@@ -34,8 +34,7 @@ namespace Evoq.Configuration
             Assert.IsNotNull(errors);
             Assert.AreEqual(0, errors.Count());
         }
-
-
+        
         [TestMethod]
         public void ConfigurationModelValidator_TryValidateObject__when__single_error__then__returns_false_and_well_formed_error()
         {
