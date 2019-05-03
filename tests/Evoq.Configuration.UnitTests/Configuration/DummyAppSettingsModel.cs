@@ -23,5 +23,5 @@ namespace Evoq.Configuration
 
         [Display(Name = "Contains.Period")]
         public string ContainsPeriod { get; set; }
-    }
+    }        
 }

@@ -16,16 +16,26 @@ namespace Evoq.Configuration
     /// </summary>
     public class ConfigurationModelValidator
     {
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurationModelValidator"/> class.
         /// </summary>
-        public ConfigurationModelValidator() { }
+        /// <param name="serviceProvider">Optional service provider.</param>
+        public ConfigurationModelValidator(IServiceProvider serviceProvider = null)
+        {
+            this.ServiceProvider = serviceProvider;
+        }
+
+        /// <summary>
+        /// The service provider which is flowed to validation attributes.
+        /// </summary>
+        public IServiceProvider ServiceProvider { get; private set; }
 
         /// <summary>
         /// Tries to validate the model.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <param name="errors">The errors.</param>
+        /// <param name="errors">The errors.</param>        
         /// <returns>True if there are no errors.</returns>
         /// <exception cref="ArgumentNullException">model</exception>
         public virtual bool TryValidateModel(object model, out IEnumerable<ConfigurationModelValidationError> errors)
@@ -36,7 +46,7 @@ namespace Evoq.Configuration
             }
 
 
-            var validationContext = new ValidationContext(model, serviceProvider: null, items: null);
+            var validationContext = new ValidationContext(model, serviceProvider: this.ServiceProvider, items: null);
             var results = new List<ValidationResult>();
 
             if (Validator.TryValidateObject(model, validationContext, results, true))

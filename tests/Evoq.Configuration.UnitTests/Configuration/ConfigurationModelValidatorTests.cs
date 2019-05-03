@@ -18,6 +18,15 @@ namespace Evoq.Configuration
 
             [MaxLength(1)]
             public string SingleLetter { get; set; }
+
+            [ValidateObject]
+            public AnotherModel AnotherModel { get; set; }
+        }
+
+        class AnotherModel
+        {
+            [MaxLength(1)]
+            public string SingleLetter { get; set; }
         }
 
         [TestMethod]
@@ -77,6 +86,28 @@ namespace Evoq.Configuration
             Assert.AreEqual(1, errors.Count());
             Assert.AreEqual("The field SingleLetter must be a string or array type with a maximum length of '1'.", errors.First().ErrorMessage);
             Assert.AreEqual(nameof(MyModel.SingleLetter), errors.First().MemberNames.First());
+        }
+
+        [TestMethod]
+        public void ConfigurationModelValidator_TryValidateObject__when__a_nested_object_is_invalid__then__returns_false_and_well_formed_error()
+        {
+            ConfigurationModelValidator v = new ConfigurationModelValidator();
+
+            IEnumerable<ConfigurationModelValidationError> errors;
+            bool isValid = v.TryValidateModel(
+                new MyModel()
+                {
+                    Max5Characters = "12345",
+                    SingleLetter = "a",
+                    AnotherModel = new AnotherModel() { SingleLetter = "Oops" }
+
+                }, out errors);
+
+            Assert.IsFalse(isValid); // !
+            Assert.IsNotNull(errors);
+            Assert.AreEqual(1, errors.Count());
+            Assert.AreEqual("The field AnotherModel references an object that failed validation.", errors.First().ErrorMessage);
+            Assert.AreEqual(nameof(MyModel.AnotherModel), errors.First().MemberNames.First());
         }
     }
 }

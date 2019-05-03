@@ -17,8 +17,10 @@ namespace Microsoft.Extensions.Configuration
         /// <param name="model">May contain the model.</param>
         /// <param name="errors">May contain validation errors.</param>        
         /// <param name="configureOptions">Optional action for configuring options.</param>
+        /// <param name="serviceProvider">Optional service provider.</param>
         /// <returns>True if the bound model is valid.</returns>
-        public static bool GetAndValidate<T>(this IConfiguration configuration, out T model, out IEnumerable<ConfigurationModelValidationError> errors, Action<BinderOptions> configureOptions = null)
+        public static bool GetAndValidate<T>(
+            this IConfiguration configuration, out T model, out IEnumerable<ConfigurationModelValidationError> errors, Action<BinderOptions> configureOptions = null, IServiceProvider serviceProvider = null)
         {
             try
             {
@@ -39,7 +41,7 @@ namespace Microsoft.Extensions.Configuration
                 }
                 else
                 {
-                    var validator = new ConfigurationModelValidator();
+                    var validator = new ConfigurationModelValidator(serviceProvider);
                     return validator.TryValidateModel(model, out errors);
                 }
             }
