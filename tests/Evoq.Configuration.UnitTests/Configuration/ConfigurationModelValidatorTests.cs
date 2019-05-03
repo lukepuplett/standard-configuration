@@ -15,6 +15,9 @@ namespace Evoq.Configuration
         {
             [StringLength(5)]
             public string Max5Characters { get; set; }
+
+            [MaxLength(1)]
+            public string SingleLetter { get; set; }
         }
 
         [TestMethod]
@@ -53,6 +56,27 @@ namespace Evoq.Configuration
             Assert.AreEqual(1, errors.Count());
             Assert.AreEqual("The field Max5Characters must be a string with a maximum length of 5.", errors.First().ErrorMessage);
             Assert.AreEqual(nameof(MyModel.Max5Characters), errors.First().MemberNames.First());
+        }
+
+        [TestMethod]
+        public void ConfigurationModelValidator_TryValidateObject__when__another_single_error__then__returns_false_and_well_formed_error()
+        {
+            ConfigurationModelValidator v = new ConfigurationModelValidator();
+
+            IEnumerable<ConfigurationModelValidationError> errors;
+            bool isValid = v.TryValidateModel(
+                new MyModel()
+                {
+                    Max5Characters = "12345",
+                    SingleLetter = "Oops"
+
+                }, out errors);
+
+            Assert.IsFalse(isValid); // !
+            Assert.IsNotNull(errors);
+            Assert.AreEqual(1, errors.Count());
+            Assert.AreEqual("The field SingleLetter must be a string or array type with a maximum length of '1'.", errors.First().ErrorMessage);
+            Assert.AreEqual(nameof(MyModel.SingleLetter), errors.First().MemberNames.First());
         }
     }
 }
