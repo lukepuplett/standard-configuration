@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ConfigurationLib\ConfigurationLib.csproj" />
+    <ProjectReference Include="..\..\src\Evoq.Configuration\Evoq.Configuration.csproj" />
   </ItemGroup>
 
 </Project>

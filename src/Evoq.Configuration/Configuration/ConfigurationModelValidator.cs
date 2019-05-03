@@ -31,7 +31,9 @@ namespace Evoq.Configuration
         public virtual bool TryValidateModel(object model, out IEnumerable<ConfigurationModelValidationError> errors)
         {
             if (model == null)
+            {
                 throw new ArgumentNullException(nameof(model));
+            }
 
 
             var validationContext = new ValidationContext(model, serviceProvider: null, items: null);
